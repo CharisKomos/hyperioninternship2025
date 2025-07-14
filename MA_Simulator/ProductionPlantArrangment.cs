@@ -8,6 +8,7 @@ namespace MA_Simulator
     public class ProductionPlantArrangment
     {
         #region Fields/Properties
+        int x = 0;
         private readonly ProductionSchedulerBase _productionScheduler;
         private readonly ChargingTrackingPosition _chgTrkPosition = new ChargingTrackingPosition((int)ServicePortEnum.ChargingServicePort, 1);
         private readonly RhfTrackingPosition _rhfTrkPosition = new RhfTrackingPosition((int)ServicePortEnum.ReheatingFurnaceServicePort, 1);

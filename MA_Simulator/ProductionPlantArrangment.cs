@@ -8,7 +8,6 @@ namespace MA_Simulator
     public class ProductionPlantArrangment
     {
         #region Fields/Properties
-        int x = 0;
         private readonly ProductionSchedulerBase _productionScheduler;
         private readonly ChargingTrackingPosition _chgTrkPosition = new ChargingTrackingPosition((int)ServicePortEnum.ChargingServicePort, 1);
         private readonly RhfTrackingPosition _rhfTrkPosition = new RhfTrackingPosition((int)ServicePortEnum.ReheatingFurnaceServicePort, 1);
@@ -84,15 +83,22 @@ namespace MA_Simulator
             if (_productionScheduler.ScheduledBillets.Any())
             {
                 // Get the first one from the stack
-                nextBilletToLoad = _productionScheduler.ScheduledBillets.First();
+                ScheduledBillet? scheduledBillet = _productionScheduler.ScheduledBillets.First();
+                nextBilletToLoad = CreateTrackingBilletFromScheduled(scheduledBillet);
 
                 // Remove it from the stack
-                _productionScheduler.ScheduledBillets.Remove(nextBilletToLoad);
+                _productionScheduler.ScheduledBillets.Remove(scheduledBillet);
             }
 
             return Task.FromResult(nextBilletToLoad);
         }
-        
+
+        private TrackingBillet? CreateTrackingBilletFromScheduled(ScheduledBillet scheduledBillet)
+        {
+            // TODO: Create a new TrackingBillet from ScheduledBillet
+            throw new NotImplementedException();
+        }
+
         private Task LogPositionsState()
         {
             Console.WriteLine("-----------------");

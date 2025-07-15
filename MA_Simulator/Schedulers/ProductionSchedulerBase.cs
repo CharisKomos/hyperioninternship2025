@@ -15,6 +15,7 @@ namespace MA_Simulator.Schedulers
         {
             ScheduledBillets = new List<TrackingBillet>
             {
+                //
                 new TrackingBillet{ L1TrackingId = 1, Name = "Billet 1", PlcSemiproductCode = "B1000", SemiproductNo = 1 },
                 new TrackingBillet{ L1TrackingId = 2, Name = "Billet 2", PlcSemiproductCode = "B1001", SemiproductNo = 1 },
                 new TrackingBillet{ L1TrackingId = 3, Name = "Billet 3", PlcSemiproductCode = "B1002", SemiproductNo = 1 },

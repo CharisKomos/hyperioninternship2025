@@ -52,10 +52,12 @@ namespace MA_Simulator.TrackingPositions.Base
             _billet = null;
         }
 
-        public virtual async Task SendMessageAsync()
+        public virtual Task SendMessageAsync()
         {
-            await _messageSender.SendMessageAsync(Message.FromObject(_positionMessage, _internalMessageId));
+            //await _messageSender.SendMessageAsync(Message.FromObject(_positionMessage, _internalMessageId));
             _isPositionProcessed = true;
+
+            return Task.CompletedTask;
         }
 
         public virtual void ConstructMesssage() { }

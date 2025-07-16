@@ -2,6 +2,7 @@
 using MA_Simulator.Models;
 using MA_Simulator.Schedulers;
 using MA_Simulator.TrackingPositions;
+using MA_Simulator.PlantYard;
 
 namespace MA_Simulator
 {
@@ -9,17 +10,24 @@ namespace MA_Simulator
     {
         #region Fields/Properties
         private readonly ProductionSchedulerBase _productionScheduler;
-        private readonly ChargingTrackingPosition _chgTrkPosition = new ChargingTrackingPosition((int)ServicePortEnum.ChargingServicePort, 1);
-        private readonly RhfTrackingPosition _rhfTrkPosition = new RhfTrackingPosition((int)ServicePortEnum.ReheatingFurnaceServicePort, 1);
-        private readonly RmTrackingPosition _rm1TrkPosition = new RmTrackingPosition(1, (int)ServicePortEnum.RmServicePort, 1);
-        private readonly RmTrackingPosition _rm2TrkPosition = new RmTrackingPosition(2, (int)ServicePortEnum.RmServicePort, 2);
+        private readonly PlantYardBase _plantYard;
+        private readonly ChargingTrackingPosition _chgTrkPosition;
+        private readonly RhfTrackingPosition _rhfTrkPosition;
+        private readonly RmTrackingPosition _rm1TrkPosition;
+        private readonly RmTrackingPosition _rm2TrkPosition;
         #endregion
 
         #region Constructor
-        public ProductionPlantArrangment(ProductionSchedulerBase productionScheduler)
+        public ProductionPlantArrangment(ProductionSchedulerBase productionScheduler, PlantYardBase plantYard)
         {
             // Production scheduler provides production plan data - What to load after
             _productionScheduler = productionScheduler;
+            _plantYard = plantYard;
+
+            _chgTrkPosition = new ChargingTrackingPosition((int)ServicePortEnum.ChargingServicePort, 1, _productionScheduler.ScheduledBillets);
+            _rhfTrkPosition = new RhfTrackingPosition((int)ServicePortEnum.ReheatingFurnaceServicePort, 1);
+            _rm1TrkPosition = new RmTrackingPosition(1, (int)ServicePortEnum.RmServicePort, 1);
+            _rm2TrkPosition = new RmTrackingPosition(2, (int)ServicePortEnum.RmServicePort, 2);
         }
         #endregion
 
@@ -62,13 +70,13 @@ namespace MA_Simulator
             }
             _chgTrkPosition.Process();
 
-            // Load scheduled billet
+            // Load yard billet
             if (_chgTrkPosition.CanAccept())
             {
-                TrackingBillet? scheduledBillet = await GetNextBillet();
-                if (scheduledBillet != null)
+                TrackingBillet? yardBillet = await GetNextBillet();
+                if (yardBillet != null)
                 {
-                    _chgTrkPosition.Accept(scheduledBillet);
+                    _chgTrkPosition.Accept(yardBillet);
                 }
             }
         }
@@ -79,24 +87,28 @@ namespace MA_Simulator
         {
             TrackingBillet? nextBilletToLoad = null;
 
-            // If there any scheduled billets left
-            if (_productionScheduler.ScheduledBillets.Any())
+            // If there any yard billets left
+            if (_plantYard.AvailableBilletsInYard.Any())
             {
                 // Get the first one from the stack
-                ScheduledBillet? scheduledBillet = _productionScheduler.ScheduledBillets.First();
-                nextBilletToLoad = CreateTrackingBilletFromScheduled(scheduledBillet);
+                YardBillet? yardBillet = _plantYard.AvailableBilletsInYard.First();
+                nextBilletToLoad = CreateTrackingBilletFromScheduled(yardBillet);
 
                 // Remove it from the stack
-                _productionScheduler.ScheduledBillets.Remove(scheduledBillet);
+                _plantYard.AvailableBilletsInYard.Remove(yardBillet);
             }
 
             return Task.FromResult(nextBilletToLoad);
         }
 
-        private TrackingBillet? CreateTrackingBilletFromScheduled(ScheduledBillet scheduledBillet)
+        private TrackingBillet? CreateTrackingBilletFromScheduled(YardBillet yardBillet)
         {
-            // TODO: Create a new TrackingBillet from ScheduledBillet
-            throw new NotImplementedException();
+            TrackingBillet yardTrackingBillet = new TrackingBillet();
+
+            // Convert the billet from the yard to tracking billet for the simulation
+            // TODO: Fill the yardTrackingBillet with properties from the yardBillet
+
+            return yardTrackingBillet;
         }
 
         private Task LogPositionsState()

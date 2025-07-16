@@ -6,14 +6,5 @@ namespace MA_Simulator.Schedulers
     {
         public List<ScheduledBillet> ScheduledBillets { get; set; } = new List<ScheduledBillet>();
         public List<Job> ScheduledJobs { get; set; } = new List<Job>();
-
-        public ProductionSchedulerBase()
-        {
-            SeedScheduler();
-        }
-
-        private void SeedScheduler()
-        {
-        }
     }
 }

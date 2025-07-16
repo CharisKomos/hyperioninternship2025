@@ -1,4 +1,5 @@
 ﻿using MA_Simulator.Configuration;
+using MA_Simulator.PlantYard;
 using MA_Simulator.Schedulers;
 
 namespace MA_Simulator.SimulationEngines
@@ -10,7 +11,7 @@ namespace MA_Simulator.SimulationEngines
         public CustomSimulationEngine(SimulatorSettings? settings, ProductionSchedulerBase _productionScheduler)
             : base(settings)
         {
-            _productionArrangmentObj = new ProductionPlantArrangment(_productionScheduler);
+            _productionArrangmentObj = new ProductionPlantArrangment(_productionScheduler, new PlantYardBase());
         }
 
         protected override async Task Step()

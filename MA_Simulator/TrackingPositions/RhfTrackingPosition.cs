@@ -1,4 +1,6 @@
-﻿using MA_Simulator.TrackingPositions.Base;
+﻿using MA_Simulator.Enums;
+using MA_Simulator.Models;
+using MA_Simulator.TrackingPositions.Base;
 using MA_Simulator.TrackingPositions.Models;
 
 namespace MA_Simulator.TrackingPositions
@@ -10,6 +12,27 @@ namespace MA_Simulator.TrackingPositions
         {
             PositionName = "RHF";
         }
+        public override void Accept(TrackingBillet billet)
+        {
+            base.Accept(billet);
+
+            //  RHF ENTRY EVENT
+            billet.Status = BilletStatus.EnteringRHF;
+
+        }
+        public override void Release()
+        {
+            if (_billet != null)
+            {
+                _billet.Status = BilletStatus.ExitedRHF;
+                _billet.Temperature = 900 + new Random().NextDouble() * 100;
+
+                Console.WriteLine($"[ RHF EXIT] Billet {_billet.TrkId} exited RHF with Temp = {_billet.Temperature:F1}°C");
+            }
+
+            base.Release();
+        }
+
 
         public override void ConstructMesssage()
         {
@@ -25,10 +48,15 @@ namespace MA_Simulator.TrackingPositions
             }
         }
 
+        private bool _entryLogged = false;
+        private bool _exitLogged = false;
+
         public override void Process()
         {
-            ConstructMesssage();
+
+        ConstructMesssage();
             base.Process();
         }
+
     }
 }

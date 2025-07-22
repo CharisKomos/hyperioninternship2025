@@ -12,7 +12,7 @@ namespace MA_Simulator.Models
         public double Temperature { get; set; }
         public List<ChemicalComposite> ChemicalComposition { get; set; } = new List<ChemicalComposite>();
 
-        public YardBillet(int l1Id, string heatCode, double length, double dim, BilletShape shape, List<ChemicalComposite> chemComp, double temperature = 25.0)
+        public YardBillet(int l1Id, string heatCode, double length, double dim, BilletShape shape, List<ChemicalComposite> chemComp, double temperature )
         {
             L1Id = l1Id;
             HeatCode = heatCode;

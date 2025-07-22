@@ -5,6 +5,7 @@ namespace MA_Simulator.TrackingPositions
 {
     public class RhfTrackingPosition : TrackingPositionBase<RhfTrackingMessage>
     {
+
         public RhfTrackingPosition(int port, int internalMessageId) : base(port, internalMessageId)
         {
             PositionName = "RHF";
@@ -12,7 +13,7 @@ namespace MA_Simulator.TrackingPositions
 
         public override void ConstructMesssage()
         {
-            if(_billet != null)
+            if (_billet != null)
             {
                 _positionMessage = new RhfTrackingMessage
                 {

@@ -17,8 +17,8 @@ namespace MA_Simulator.Models
         // New fields from YardBillet
         public BilletShape Shape { get; set; }
         public List<ChemicalComposite> ChemicalComposition { get; set; } = new();
-        public TrkStatus Status { get; set; } = TrkStatus.InYard;
+        public BilletStatus Status { get; set; } = BilletStatus.InYard;
         public DateTime? ChargedTime { get; set; } = null;
-        public double? Temperature { get; set; } = null;
+        public double Temperature { get; set; }
     }
 }

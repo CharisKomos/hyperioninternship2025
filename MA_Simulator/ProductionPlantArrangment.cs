@@ -111,13 +111,14 @@ namespace MA_Simulator
             // Create new TrackingBillet object
             TrackingBillet yardTrackingBillet = new TrackingBillet();
 
-            //  Explicit mapping of each property
+            yardTrackingBillet.PlcSemiproductCode = $"{yardBillet.HeatCode}_{yardBillet.L1Id}";
             yardTrackingBillet.TrkId = yardBillet.L1Id;
             yardTrackingBillet.HeatCode = yardBillet.HeatCode;
             yardTrackingBillet.Length = yardBillet.Length;
             yardTrackingBillet.Height = yardBillet.Dimension;
             yardTrackingBillet.Shape = yardBillet.Shape;
             yardTrackingBillet.ChemicalComposition = yardBillet.ChemicalComposition;
+            yardTrackingBillet.Temperature = yardBillet.Temperature;
 
             return yardTrackingBillet;
         }
@@ -129,7 +130,9 @@ namespace MA_Simulator
                 $"- Status: {_chgTrkPosition.BilletInPosition()?.Status} " +
                 $"- ChargedAt: {_chgTrkPosition.BilletInPosition()?.ChargedTime?.ToString("HH:mm:ss") ?? "N/A"}" +
                 $"- Weight={_chgTrkPosition.BilletInPosition()?.WeightMeasured.ToString("F2") ?? "N/A"} kg");  
-            Console.WriteLine($"{_rhfTrkPosition.PositionName} : [{_rhfTrkPosition.BilletInPosition()?.HeatCode}]");
+            Console.WriteLine($"{_rhfTrkPosition.PositionName} : [{_rhfTrkPosition.BilletInPosition()?.HeatCode}] " +
+                $"- Status: {_rhfTrkPosition.BilletInPosition()?.Status} " +
+                $"- Temp={_rhfTrkPosition.BilletInPosition()?.Temperature.ToString("F1") ?? "N/A"}°C");
             Console.WriteLine($"{_rm1TrkPosition.PositionName} : [{_rm1TrkPosition.BilletInPosition()?.HeatCode}]");
             Console.WriteLine($"{_rm2TrkPosition.PositionName} : [{_rm2TrkPosition.BilletInPosition()?.HeatCode}]");
             Console.WriteLine("-----------------");

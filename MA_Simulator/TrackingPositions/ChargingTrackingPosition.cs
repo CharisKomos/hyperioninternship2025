@@ -18,12 +18,12 @@ namespace MA_Simulator.TrackingPositions
         public override void Accept(TrackingBillet billet)
         {
             base.Accept(billet);
+
+            // Billet is charged
             _billet!.Status = BilletStatus.Charged;
             Console.WriteLine($"The billet {_billet.PlcSemiproductCode} has status {_billet.Status}");
 
-
             // Validation
-            // Hint: Use .Where(condition to find the JobStatus.InProcess)
             var inProcessBillets = _allScheduledBillets
                    .Where(sb => sb.JobStatus == JobStatus.InProcess)
                    .ToList();
@@ -33,7 +33,9 @@ namespace MA_Simulator.TrackingPositions
             {
                 _billet!.Status = BilletStatus.Consumed;
                 _billet.ChargedTime = DateTime.Now;
-                _billet.WeightMeasured = 1250 + new Random().NextDouble() * 100;
+
+                // Introduce a measuring deviation .5%
+                _billet.WeightMeasured = _billet.Weight*1.005;
             }
             else
             {
@@ -63,6 +65,7 @@ namespace MA_Simulator.TrackingPositions
                 Release();  // This clears CHG position
                 return;
             }
+
             ConstructMesssage();
             base.Process();
         }

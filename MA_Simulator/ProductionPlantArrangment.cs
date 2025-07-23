@@ -3,6 +3,7 @@ using MA_Simulator.Models;
 using MA_Simulator.Schedulers;
 using MA_Simulator.TrackingPositions;
 using MA_Simulator.PlantYard;
+using MA_Simulator.TrackingPositions.Models;
 
 namespace MA_Simulator
 {
@@ -14,7 +15,7 @@ namespace MA_Simulator
         private readonly ChargingTrackingPosition _chgTrkPosition;
         private readonly RhfTrackingPosition _rhfTrkPosition;
         private readonly RmTrackingPosition _rm1TrkPosition;
-        private readonly RmTrackingPosition _rm2TrkPosition;
+        private readonly ShTrackingPosition _sh1TrkPosition;
         #endregion
 
         #region Constructor
@@ -27,7 +28,9 @@ namespace MA_Simulator
             _chgTrkPosition = new ChargingTrackingPosition((int)ServicePortEnum.ChargingServicePort, 1, _productionScheduler.ScheduledBillets);
             _rhfTrkPosition = new RhfTrackingPosition((int)ServicePortEnum.ReheatingFurnaceServicePort, 1);
             _rm1TrkPosition = new RmTrackingPosition(1, (int)ServicePortEnum.RmServicePort, 1);
-            _rm2TrkPosition = new RmTrackingPosition(2, (int)ServicePortEnum.RmServicePort, 2);
+            _sh1TrkPosition = new ShTrackingPosition(1, (int)ServicePortEnum.ShServicePort, 1);
+
+            ConfigureSetupParameters();
         }
         #endregion
 
@@ -38,18 +41,16 @@ namespace MA_Simulator
 
             // LAST POSITION NEEDS TO BE LIKE THIS
             // RM2
-            if (_rm2TrkPosition.CanRelease())
+            if (_sh1TrkPosition.CanRelease())
             {
-                _rm2TrkPosition.Release();
+                _sh1TrkPosition.Release();
             }
-            _rm2TrkPosition.Process();
+            _sh1TrkPosition.Process();
 
             // RM1
-            if (_rm2TrkPosition.CanAccept() && _rm1TrkPosition.CanRelease())
+            if (_sh1TrkPosition.CanAccept() && _rm1TrkPosition.CanRelease())
             {
-                _rm1TrkPosition._billet!.Length *= 1.2;
-
-                _rm2TrkPosition.Accept(_rm1TrkPosition.BilletInPosition()!);
+                _sh1TrkPosition.Accept(_rm1TrkPosition.BilletInPosition()!);
                 _rm1TrkPosition.Release();
             }
             _rm1TrkPosition.Process();
@@ -83,6 +84,13 @@ namespace MA_Simulator
         #endregion
 
         #region Private Methods
+        private void ConfigureSetupParameters()
+        {
+            _rm1TrkPosition._decreaseFactorDimension = 0.05;
+            _sh1TrkPosition._croppedHeadLength = 100;
+            _sh1TrkPosition._croppedTailLength = 100;
+        }
+
         private Task<TrackingBillet?> GetNextBillet()
         {
             TrackingBillet? nextBilletToLoad = null;
@@ -104,7 +112,6 @@ namespace MA_Simulator
         private TrackingBillet? CreateTrackingBilletFromScheduled(YardBillet yardBillet)
         {
             // Convert the billet from the yard to tracking billet for the simulation
-            // TODO: Fill the yardTrackingBillet with properties from the yardBillet
             if (yardBillet == null)
                 return null;
 
@@ -112,9 +119,10 @@ namespace MA_Simulator
             TrackingBillet yardTrackingBillet = new TrackingBillet();
 
             yardTrackingBillet.PlcSemiproductCode = $"{yardBillet.HeatCode}_{yardBillet.L1Id}";
-            yardTrackingBillet.TrkId = yardBillet.L1Id;
+            yardTrackingBillet.L1TrackingId = yardBillet.L1Id;
             yardTrackingBillet.HeatCode = yardBillet.HeatCode;
             yardTrackingBillet.Length = yardBillet.Length;
+            yardTrackingBillet.Weight = yardBillet.Weight;
             yardTrackingBillet.Height = yardBillet.Dimension;
             yardTrackingBillet.Shape = yardBillet.Shape;
             yardTrackingBillet.ChemicalComposition = yardBillet.ChemicalComposition;
@@ -134,7 +142,7 @@ namespace MA_Simulator
                 $"- Status: {_rhfTrkPosition.BilletInPosition()?.Status} " +
                 $"- Temp={_rhfTrkPosition.BilletInPosition()?.Temperature.ToString("F1") ?? "N/A"}°C");
             Console.WriteLine($"{_rm1TrkPosition.PositionName} : [{_rm1TrkPosition.BilletInPosition()?.HeatCode}]");
-            Console.WriteLine($"{_rm2TrkPosition.PositionName} : [{_rm2TrkPosition.BilletInPosition()?.HeatCode}]");
+            Console.WriteLine($"{_sh1TrkPosition.PositionName} : [{_sh1TrkPosition.BilletInPosition()?.HeatCode}]");
             Console.WriteLine("-----------------");
             Console.WriteLine();
 

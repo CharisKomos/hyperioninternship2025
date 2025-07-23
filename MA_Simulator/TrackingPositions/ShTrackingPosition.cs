@@ -4,29 +4,28 @@ using MA_Simulator.TrackingPositions.Models;
 
 namespace MA_Simulator.TrackingPositions
 {
-    public class RmTrackingPosition : TrackingPositionBase<RmTrackingMessage>
+    public class ShTrackingPosition : TrackingPositionBase<ShTrackingMessage>
     {
-        public double _decreaseFactorDimension { get; set; } = 1.0;
+        public double _croppedHeadLength { get; set; } = 0.0; // Units: m
+        public double _croppedTailLength { get; set; } = 0.0; // Units: m
 
-        public RmTrackingPosition(int positionNo, int port, int internalMessageId) : base(port, internalMessageId)
+        public ShTrackingPosition(int positionNo, int port, int internalMessageId) : base(port, internalMessageId)
         {
-            PositionName = $"RM{positionNo}";
+            PositionName = $"SH{positionNo}";
         }
 
         public override void Accept(TrackingBillet billet)
         {
             base.Accept(billet);
-
-            // TODO: Handle the billet entering event
         }
 
         public override void Release()
         {
             // TODO: Handle the billet exiting event
-            // TODO: Show the change in the dimensions after rolling - Hint: The dimension changes by a percentile factor
-            // TODO: Show the change in the length after rolling - Hint: The length will be calculated according to the decreaseFactor of the dimension. Assumption: dimension is circle and the billet is cylinder
             
-            // Note: Don't print on the screen any of the dimension/length
+            // TODO: Make head and tail cuts on the billet. Change the value of the TotalCroppedTail and TotalCroppedHead from the billet accordingly.
+                // Hint: The cropped length can be a percentage of the total length of the billet
+            // TODO: Update the length of the billet after the cropped cuts
 
             base.Release();
         }
@@ -35,7 +34,7 @@ namespace MA_Simulator.TrackingPositions
         {
             if(_billet != null)
             {
-                _positionMessage = new RmTrackingMessage
+                _positionMessage = new ShTrackingMessage
                 {
                     Name = _billet.Name,
                     L1TrackingId = _billet.L1TrackingId,

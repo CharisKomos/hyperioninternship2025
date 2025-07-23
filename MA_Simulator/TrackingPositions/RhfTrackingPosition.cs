@@ -27,7 +27,7 @@ namespace MA_Simulator.TrackingPositions
                 _billet.Status = BilletStatus.ExitedRHF;
                 _billet.Temperature = 900 + new Random().NextDouble() * 100;
 
-                Console.WriteLine($"[ RHF EXIT] Billet {_billet.TrkId} exited RHF with Temp = {_billet.Temperature:F1}°C");
+                Console.WriteLine($"[RHF EXIT] Billet {_billet.PlcSemiproductCode} exited RHF with Temp = {_billet.Temperature:F1}°C");
             }
 
             base.Release();
@@ -48,13 +48,9 @@ namespace MA_Simulator.TrackingPositions
             }
         }
 
-        private bool _entryLogged = false;
-        private bool _exitLogged = false;
-
         public override void Process()
         {
-
-        ConstructMesssage();
+            ConstructMesssage();
             base.Process();
         }
 

@@ -11,5 +11,6 @@ namespace MA_Simulator.Enums
         ChargingServicePort = 5001,
         ReheatingFurnaceServicePort = 5002,
         RmServicePort = 5003,
+        ShServicePort = 5004,
     }
 }

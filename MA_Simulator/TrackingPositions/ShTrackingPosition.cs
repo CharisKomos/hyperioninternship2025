@@ -9,7 +9,7 @@ namespace MA_Simulator.TrackingPositions
         public double _croppedHeadLength { get; set; } = 0.0; // Units: m
         public double _croppedTailLength { get; set; } = 0.0; // Units: m
 
-        public ShTrackingPosition(int positionNo, int port, int internalMessageId) : base(port, internalMessageId)
+        public ShTrackingPosition(int positionNo)
         {
             PositionName = $"SH{positionNo}";
         }

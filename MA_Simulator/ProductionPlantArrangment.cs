@@ -16,6 +16,9 @@ namespace MA_Simulator
         private readonly RhfTrackingPosition _rhfTrkPosition;
         private readonly RmTrackingPosition _rm1TrkPosition;
         private readonly ShTrackingPosition _sh1TrkPosition;
+        private readonly CoolingTrackingPosition _ccTrkPosition;
+        private readonly CoolingTrackingPosition _cbTrkPosition;
+        private readonly LhfTrackingPosition _lhfTrkPosition;
         #endregion
 
         #region Constructor
@@ -25,10 +28,12 @@ namespace MA_Simulator
             _productionScheduler = productionScheduler;
             _plantYard = plantYard;
 
-            _chgTrkPosition = new ChargingTrackingPosition((int)ServicePortEnum.ChargingServicePort, 1, _productionScheduler.ScheduledBillets);
-            _rhfTrkPosition = new RhfTrackingPosition((int)ServicePortEnum.ReheatingFurnaceServicePort, 1);
-            _rm1TrkPosition = new RmTrackingPosition(1, (int)ServicePortEnum.RmServicePort, 1);
-            _sh1TrkPosition = new ShTrackingPosition(1, (int)ServicePortEnum.ShServicePort, 1);
+            _chgTrkPosition = new ChargingTrackingPosition(_productionScheduler.ScheduledBillets);
+            _rhfTrkPosition = new RhfTrackingPosition();
+            _rm1TrkPosition = new RmTrackingPosition(1);
+            _sh1TrkPosition = new ShTrackingPosition(1);
+            _ccTrkPosition = new CoolingTrackingPosition("Cooling Conveyor", BilletStatus.CoolingConveyor);
+            _cbTrkPosition = new CoolingTrackingPosition("Cooling Bed", BilletStatus.CoolingConveyor);
 
             ConfigureSetupParameters();
             Logger.Instance.Log("========================= NEW SIMULATION STARTED =========================");
@@ -101,7 +106,9 @@ namespace MA_Simulator
             {
                 // Get the first one from the stack
                 YardBillet? yardBillet = _plantYard.AvailableBilletsInYard.First();
-                nextBilletToLoad = CreateTrackingBilletFromScheduled(yardBillet);
+                
+                if (_productionScheduler.ScheduledBillets.Any(sb => sb.HeatCode.Equals(yardBillet.HeatCode, StringComparison.InvariantCultureIgnoreCase)))
+                    nextBilletToLoad = CreateTrackingBilletFromScheduled(yardBillet);
 
                 // Remove it from the stack
                 _plantYard.AvailableBilletsInYard.Remove(yardBillet);
@@ -137,7 +144,6 @@ namespace MA_Simulator
             Logger.Instance.Log("---------------------------------------------------");
             Logger.Instance.Log($"{_chgTrkPosition.PositionName} : [{_chgTrkPosition.BilletInPosition()?.HeatCode}] " +
                 $"- Status: {_chgTrkPosition.BilletInPosition()?.Status} " +
-                $"- ChargedAt: {_chgTrkPosition.BilletInPosition()?.ChargedTime?.ToString("HH:mm:ss") ?? "N/A"}" +
                 $"- Weight={_chgTrkPosition.BilletInPosition()?.WeightMeasured.ToString("F2") ?? "N/A"} kg");
             Logger.Instance.Log($"{_rhfTrkPosition.PositionName} : [{_rhfTrkPosition.BilletInPosition()?.HeatCode}] " +
                 $"- Status: {_rhfTrkPosition.BilletInPosition()?.Status} " +

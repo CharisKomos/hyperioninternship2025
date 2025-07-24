@@ -18,7 +18,7 @@ namespace MA_Simulator.TrackingPositions.Base
         #endregion
 
         #region Constructor
-        public TrackingPositionBase(int port, int internalMessageId)
+        public TrackingPositionBase(int port = 0, int internalMessageId = 0)
         {
             _messageSender = new MessageSender(port);
             _internalMessageId = internalMessageId;

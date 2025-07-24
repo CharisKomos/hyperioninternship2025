@@ -10,7 +10,7 @@ namespace MA_Simulator.TrackingPositions
     {
         public double _decreaseFactorDimension { get; set; } = 1.0;
 
-        public RmTrackingPosition(int positionNo, int port, int internalMessageId) : base(port, internalMessageId)
+        public RmTrackingPosition(int positionNo)
         {
             PositionName = $"RM{positionNo}";
         }
@@ -54,26 +54,6 @@ namespace MA_Simulator.TrackingPositions
         private static double CalculateVolume(double diameter, double length)
         {
             return Math.Round((Math.PI * Math.Pow(diameter / 2, 2) * length) + 0.005, 2);
-        }
-
-        public override void ConstructMesssage()
-        {
-            if(_billet != null)
-            {
-                _positionMessage = new RmTrackingMessage
-                {
-                    Name = _billet.Name,
-                    L1TrackingId = _billet.L1TrackingId,
-                    PlcSemiproductCode = _billet.PlcSemiproductCode,
-                    SemiproductNo = _billet.SemiproductNo
-                };
-            }
-        }
-
-        public override void Process()
-        {
-            ConstructMesssage();
-            base.Process();
         }
     }
 }

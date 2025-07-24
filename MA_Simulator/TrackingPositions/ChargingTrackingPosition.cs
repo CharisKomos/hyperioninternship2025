@@ -9,7 +9,7 @@ namespace MA_Simulator.TrackingPositions
     {
         private List<ScheduledBillet> _allScheduledBillets;
 
-        public ChargingTrackingPosition(int port, int internalMessageId, List<ScheduledBillet> scheduledBillets) : base(port, internalMessageId)
+        public ChargingTrackingPosition(List<ScheduledBillet> scheduledBillets)
         {
             PositionName = "CHG";
             _allScheduledBillets = scheduledBillets;
@@ -44,20 +44,6 @@ namespace MA_Simulator.TrackingPositions
             }
         }
 
-        public override void ConstructMesssage()
-        {
-            if(_billet != null)
-            {
-                _positionMessage = new ChargingTrackingMessage
-                {
-                    Name = _billet.Name,
-                    L1TrackingId = _billet.L1TrackingId,
-                    PlcSemiproductCode = _billet.PlcSemiproductCode,
-                    SemiproductNo = _billet.SemiproductNo
-                };
-            }
-        }
-
         public override void Process()
         {
             if (_billet?.Status == BilletStatus.Rejected)
@@ -66,7 +52,6 @@ namespace MA_Simulator.TrackingPositions
                 return;
             }
 
-            ConstructMesssage();
             base.Process();
         }
     }

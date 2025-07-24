@@ -10,6 +10,10 @@
         ExitedRHF = 5,
         EnteringRM = 6,
         ExitedRM = 7,
-        Completed = 8
+        CoolingBed = 8,
+        CoolingConveyor = 9,
+        LHF = 10,
+        BDL = 11,
+        Completed = 12
     }
 }

@@ -7,8 +7,7 @@ namespace MA_Simulator.TrackingPositions
 {
     public class RhfTrackingPosition : TrackingPositionBase<RhfTrackingMessage>
     {
-
-        public RhfTrackingPosition(int port, int internalMessageId) : base(port, internalMessageId)
+        public RhfTrackingPosition()
         {
             PositionName = "RHF";
         }
@@ -17,7 +16,8 @@ namespace MA_Simulator.TrackingPositions
             base.Accept(billet);
 
             //  RHF ENTRY EVENT
-            billet.Status = BilletStatus.EnteringRHF;
+            if (_billet != null)
+                _billet.Status = BilletStatus.EnteringRHF;
 
         }
         public override void Release()
@@ -32,27 +32,5 @@ namespace MA_Simulator.TrackingPositions
 
             base.Release();
         }
-
-
-        public override void ConstructMesssage()
-        {
-            if (_billet != null)
-            {
-                _positionMessage = new RhfTrackingMessage
-                {
-                    Name = _billet.Name,
-                    L1TrackingId = _billet.L1TrackingId,
-                    PlcSemiproductCode = _billet.PlcSemiproductCode,
-                    SemiproductNo = _billet.SemiproductNo
-                };
-            }
-        }
-
-        public override void Process()
-        {
-            ConstructMesssage();
-            base.Process();
-        }
-
     }
 }

@@ -22,5 +22,6 @@ namespace MA_Simulator.Models
         public double Dimension { get; set; }
         public double TotalCroppedHead { get; set; } = 0.0;
         public double TotalCroppedTail { get; set; } = 0.0;
+        public ProductType PrdType { get; set; } = ProductType.Semiproduct;
     }
 }

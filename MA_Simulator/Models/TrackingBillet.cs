@@ -19,6 +19,7 @@ namespace MA_Simulator.Models
         public BilletStatus Status { get; set; } = BilletStatus.InYard;
         public DateTime? ChargedTime { get; set; } = null;
         public double Temperature { get; set; }
+        public double Dimension { get; set; }
         public double TotalCroppedHead { get; set; } = 0.0;
         public double TotalCroppedTail { get; set; } = 0.0;
     }

@@ -1,4 +1,5 @@
-﻿using MA_Simulator.Models;
+﻿using MA_Simulator.Enums;
+using MA_Simulator.Models;
 using MA_Simulator.TrackingPositions.Base;
 using MA_Simulator.TrackingPositions.Models;
 
@@ -17,18 +18,29 @@ namespace MA_Simulator.TrackingPositions
         {
             base.Accept(billet);
 
-            // TODO: Handle the billet entering event
+            billet.Status = BilletStatus.EnteringRM;
         }
 
         public override void Release()
         {
-            // TODO: Handle the billet exiting event
-            // TODO: Show the change in the dimensions after rolling - Hint: The dimension changes by a percentile factor
-            // TODO: Show the change in the length after rolling - Hint: The length will be calculated according to the decreaseFactor of the dimension. Assumption: dimension is circle and the billet is cylinder
-            
-            // Note: Don't print on the screen any of the dimension/length
+            if (_billet is TrackingBillet rollingBillet)
+            {
+                rollingBillet.Status = BilletStatus.ExitedRM;
+                double originalDiameter = rollingBillet.Dimension;
+                double originalLength = rollingBillet.Length;
 
-            base.Release();
+                // Apply percentile reduction to diameter
+                double newDiameter = originalDiameter * (1 - _decreaseFactorDimension);
+                rollingBillet.Dimension = newDiameter;
+
+                // Maintain constant volume for a cylinder: V = π * r² * h
+                // So: newLength = originalVolume / (π * (newDiameter/2)²)
+                double originalVolume = Math.PI * Math.Pow(originalDiameter / 2, 2) * originalLength;
+                double newLength = originalVolume / (Math.PI * Math.Pow(newDiameter / 2, 2));
+                rollingBillet.Length = newLength;
+
+                base.Release();
+            }
         }
 
         public override void ConstructMesssage()

@@ -31,6 +31,7 @@ namespace MA_Simulator
             _sh1TrkPosition = new ShTrackingPosition(1, (int)ServicePortEnum.ShServicePort, 1);
 
             ConfigureSetupParameters();
+            Logger.Instance.Log("========================= NEW SIMULATION STARTED =========================");
         }
         #endregion
 
@@ -133,18 +134,17 @@ namespace MA_Simulator
 
         private Task LogPositionsState()
         {
-            Console.WriteLine("-----------------");
-            Console.WriteLine($"{_chgTrkPosition.PositionName} : [{_chgTrkPosition.BilletInPosition()?.HeatCode}] " +
+            Logger.Instance.Log("---------------------------------------------------");
+            Logger.Instance.Log($"{_chgTrkPosition.PositionName} : [{_chgTrkPosition.BilletInPosition()?.HeatCode}] " +
                 $"- Status: {_chgTrkPosition.BilletInPosition()?.Status} " +
                 $"- ChargedAt: {_chgTrkPosition.BilletInPosition()?.ChargedTime?.ToString("HH:mm:ss") ?? "N/A"}" +
-                $"- Weight={_chgTrkPosition.BilletInPosition()?.WeightMeasured.ToString("F2") ?? "N/A"} kg");  
-            Console.WriteLine($"{_rhfTrkPosition.PositionName} : [{_rhfTrkPosition.BilletInPosition()?.HeatCode}] " +
+                $"- Weight={_chgTrkPosition.BilletInPosition()?.WeightMeasured.ToString("F2") ?? "N/A"} kg");
+            Logger.Instance.Log($"{_rhfTrkPosition.PositionName} : [{_rhfTrkPosition.BilletInPosition()?.HeatCode}] " +
                 $"- Status: {_rhfTrkPosition.BilletInPosition()?.Status} " +
                 $"- Temp={_rhfTrkPosition.BilletInPosition()?.Temperature.ToString("F1") ?? "N/A"}°C");
-            Console.WriteLine($"{_rm1TrkPosition.PositionName} : [{_rm1TrkPosition.BilletInPosition()?.HeatCode}]");
-            Console.WriteLine($"{_sh1TrkPosition.PositionName} : [{_sh1TrkPosition.BilletInPosition()?.HeatCode}]");
-            Console.WriteLine("-----------------");
-            Console.WriteLine();
+            Logger.Instance.Log($"{_rm1TrkPosition.PositionName} : [{_rm1TrkPosition.BilletInPosition()?.HeatCode}]");
+            Logger.Instance.Log($"{_sh1TrkPosition.PositionName} : [{_sh1TrkPosition.BilletInPosition()?.HeatCode}]");
+            Logger.Instance.Log("---------------------------------------------------");
 
             return Task.CompletedTask;
         }

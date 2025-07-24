@@ -123,7 +123,7 @@ namespace MA_Simulator
             yardTrackingBillet.HeatCode = yardBillet.HeatCode;
             yardTrackingBillet.Length = yardBillet.Length;
             yardTrackingBillet.Weight = yardBillet.Weight;
-            yardTrackingBillet.Height = yardBillet.Dimension;
+            yardTrackingBillet.Dimension = yardBillet.Dimension;
             yardTrackingBillet.Shape = yardBillet.Shape;
             yardTrackingBillet.ChemicalComposition = yardBillet.ChemicalComposition;
             yardTrackingBillet.Temperature = yardBillet.Temperature;

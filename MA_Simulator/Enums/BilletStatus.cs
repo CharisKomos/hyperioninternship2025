@@ -8,6 +8,8 @@
         Rejected = 3,
         EnteringRHF = 4,
         ExitedRHF = 5,
-        Completed = 6
+        EnteringRM = 6,
+        ExitedRM = 7,
+        Completed = 8
     }
 }

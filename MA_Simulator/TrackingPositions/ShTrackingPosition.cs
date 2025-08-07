@@ -1,4 +1,5 @@
-﻿using MA_Simulator.Models;
+﻿using MA_Simulator.Enums;
+using MA_Simulator.Models;
 using MA_Simulator.TrackingPositions.Base;
 using MA_Simulator.TrackingPositions.Models;
 
@@ -21,13 +22,21 @@ namespace MA_Simulator.TrackingPositions
 
         public override void Release()
         {
-            // TODO: Handle the billet exiting event
-            
-            // TODO: Make head and tail cuts on the billet. Change the value of the TotalCroppedTail and TotalCroppedHead from the billet accordingly.
-                // Hint: The cropped length can be a percentage of the total length of the billet
-            // TODO: Update the length of the billet after the cropped cuts
+            if (_billet != null)
+            {
+                _billet.Status = BilletStatus.ExitedSH;
 
-            base.Release();
+                double croppedHead = _croppedHeadLength;
+                double croppedTail = _croppedTailLength;
+
+                // Update billet fields
+
+                _billet.Length = _billet.Length - (croppedHead + croppedTail);
+
+                Console.WriteLine($"[SH] Cropped Head = {croppedHead}mm, Cropped Tail = {croppedTail}mm, New Length = {_billet.Length:F0}mm");
+
+                base.Release();
+            }
         }
 
         public override void ConstructMesssage()

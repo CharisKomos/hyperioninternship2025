@@ -20,7 +20,7 @@ namespace MA_Simulator.TrackingPositions
         {
             base.Accept(billet);
 
-            _billet!.Status = _billetEnteringStatus;
+            _billet!.Status = BilletStatus.EnteredCC;
             Console.WriteLine($"The billet {_billet.PlcSemiproductCode} has status {Enum.GetName(_billet.Status)} at {PositionName}");
         }
 

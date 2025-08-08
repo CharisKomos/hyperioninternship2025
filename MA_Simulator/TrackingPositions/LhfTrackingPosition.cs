@@ -7,7 +7,7 @@ namespace MA_Simulator.TrackingPositions
 {
     public class LhfTrackingPosition : TrackingPositionBase<LhfTrackingMessage>
     {
-        public LhfTrackingPosition()
+        public LhfTrackingPosition(int v)
         {
             PositionName = $"LHF";
         }

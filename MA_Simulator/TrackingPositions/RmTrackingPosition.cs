@@ -41,7 +41,9 @@ namespace MA_Simulator.TrackingPositions
                 double originalVolume = CalculateVolume(originalDiameter, originalLength);
 
                 _billet.Length = CalculateLength(originalVolume, _billet.Dimension);
-            }
+                Console.WriteLine($"[RM] Dimension reduced to {_billet.Dimension:F2} mm. New Length: {_billet.Length:F0} mm");
+
+        }
 
             base.Release();
         }
